@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriveX | Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <a href="index.html" class="logo">DRIVE<span>X</span></a>
+    <a href="index.html" class="outline-btn">Home</a>
+</header>
+
+<section class="section">
+    <div class="modal-content" style="margin:auto">
+        <p class="eyebrow">WELCOME BACK</p>
+        <h2>Member <span>Login</span></h2>
+        <p class="muted">Access your DriveX account.</p>
+
+        <form id="loginPageForm">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="email" required placeholder="Enter your email">
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" required placeholder="Enter your password">
+            </div>
+
+            <button class="gold-btn full-btn" type="submit">Login</button>
+        </form>
+
+        <p class="muted" style="text-align:center;margin-top:20px">
+            New customer?
+            <a href="register.html" style="color:#d6ad60">Create account</a>
+        </p>
+    </div>
+</section>
+
+<script>
+document.getElementById("loginPageForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim().toLowerCase();
+    const password = document.getElementById("password").value;
+
+    // Demo administrator access.
+    // Replace this with secure server-side authentication.
+    if (email === "admin@drivex.com" && password === "admin123") {
+        localStorage.setItem("drivexCurrentUser", JSON.stringify({
+            email: email,
+            name: "DriveX Admin",
+            role: "admin"
+        }));
+
+        window.location.href = "admin.html";
+        return;
+    }
+
+    // This frontend demo verifies only registered email addresses.
+    // Password verification must be performed by a backend.
+    const users = JSON.parse(localStorage.getItem("drivexUsers") || "[]");
+    const user = users.find(item => item.email === email);
+
+    if (!user) {
+        alert("Account not found. Please register first.");
+        return;
+    }
+
+    localStorage.setItem("drivexCurrentUser", JSON.stringify({
+        name: user.name,
+        email: user.email,
+        role: "customer"
+    }));
+
+    alert("Demo login successful!");
+    window.location.href = "dashboard.html";
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,243 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriveX | Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <a href="index.html" class="logo">DRIVE<span>X</span></a>
+    <div class="nav-actions">
+        <span style="color:#d6ad60">ADMIN PANEL</span>
+        <button class="gold-btn" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<section class="section">
+    <p class="eyebrow">SYSTEM MANAGEMENT</p>
+    <h2>Admin <span>Dashboard</span></h2>
+    <p class="muted">Manage your DriveX demo rental platform.</p>
+
+    <div class="benefit-grid" style="margin-top:35px">
+        <div class="benefit-card">
+            <h3>Total Bookings</h3>
+            <h2 id="bookingCount">0</h2>
+        </div>
+
+        <div class="benefit-card">
+            <h3>Registered Users</h3>
+            <h2 id="userCount">0</h2>
+        </div>
+
+        <div class="benefit-card">
+            <h3>Revenue Estimate</h3>
+            <h2 id="revenue">₹0</h2>
+        </div>
+
+        <div class="benefit-card">
+            <h3>Available Cars</h3>
+            <h2 id="carCount">9</h2>
+        </div>
+    </div>
+
+    <div style="margin-top:65px">
+        <h2>Manage <span>Demo Inventory</span></h2>
+
+        <form id="addCarForm" class="finder-form" style="margin-top:25px">
+            <div>
+                <label>Car Name</label>
+                <input id="newCarName" required placeholder="Car name">
+            </div>
+
+            <div>
+                <label>Daily Price (₹)</label>
+                <input id="newCarPrice" type="number" min="1" required placeholder="Price">
+            </div>
+
+            <div>
+                <label>Category</label>
+                <select id="newCarType">
+                    <option>SUV</option>
+                    <option>Luxury</option>
+                    <option>Sports</option>
+                    <option>Electric</option>
+                    <option>Sedan</option>
+                </select>
+            </div>
+
+            <button class="gold-btn" type="submit">Add Demo Car</button>
+        </form>
+
+        <div id="inventoryList" style="margin-top:25px"></div>
+    </div>
+
+    <div style="margin-top:65px">
+        <h2>Customer <span>Bookings</span></h2>
+        <div id="adminBookings" style="margin-top:20px"></div>
+    </div>
+
+    <div style="margin-top:65px">
+        <h2>Registered <span>Customers</span></h2>
+        <div id="adminUsers" style="margin-top:20px"></div>
+    </div>
+</section>
+
+<script>
+// DEMO ADMIN ACCESS CHECK
+const admin = JSON.parse(localStorage.getItem("drivexCurrentUser") || "null");
+
+if (!admin || admin.role !== "admin") {
+    alert("Admin access required.");
+    window.location.href = "login.html";
+}
+
+// Load demo information
+let bookings = JSON.parse(localStorage.getItem("drivexBookings") || "[]");
+let users = JSON.parse(localStorage.getItem("drivexUsers") || "[]");
+
+const defaultInventory = [
+    {id:1,name:"Porsche 911",price:12000,type:"Sports"},
+    {id:2,name:"BMW X5",price:8500,type:"SUV"},
+    {id:3,name:"Mercedes-Benz C-Class",price:9500,type:"Luxury"},
+    {id:4,name:"Tesla Model 3",price:7500,type:"Electric"},
+    {id:5,name:"Range Rover Sport",price:11000,type:"SUV"},
+    {id:6,name:"Audi A6",price:7000,type:"Sedan"},
+    {id:7,name:"Lamborghini Huracan",price:25000,type:"Sports"},
+    {id:8,name:"Toyota Fortuner",price:6500,type:"SUV"},
+    {id:9,name:"Hyundai IONIQ 5",price:8000,type:"Electric"}
+];
+
+let inventory = JSON.parse(localStorage.getItem("drivexInventory") || "null");
+
+if (!Array.isArray(inventory)) {
+    inventory = defaultInventory;
+    localStorage.setItem("drivexInventory", JSON.stringify(inventory));
+}
+
+function updateDashboard() {
+    bookings = JSON.parse(localStorage.getItem("drivexBookings") || "[]");
+    users = JSON.parse(localStorage.getItem("drivexUsers") || "[]");
+
+    document.getElementById("bookingCount").textContent = bookings.length;
+    document.getElementById("userCount").textContent = users.length;
+
+    const total = bookings.reduce((sum, b) => sum + Number(b.total || 0), 0);
+
+    document.getElementById("revenue").textContent =
+        "₹" + total.toLocaleString("en-IN");
+
+    document.getElementById("carCount").textContent = inventory.length;
+
+    displayInventory();
+    displayAdminBookings();
+    displayUsers();
+}
+
+function displayInventory() {
+    document.getElementById("inventoryList").innerHTML =
+        inventory.length ? inventory.map(car => `
+            <div class="booking-item">
+                <div>
+                    <strong>${escapeHTML(car.name)}</strong>
+                    <p class="muted">${escapeHTML(car.type)} | ₹${Number(car.price).toLocaleString("en-IN")}/day</p>
+                </div>
+                <button class="outline-btn" onclick="deleteCar(${car.id})">
+                    Remove
+                </button>
+            </div>
+        `).join("") : "<p class='muted'>No demo cars available.</p>";
+}
+
+function displayAdminBookings() {
+    const container = document.getElementById("adminBookings");
+
+    container.innerHTML = bookings.length ? bookings.map(b => `
+        <div class="booking-item">
+            <div>
+                <strong>${escapeHTML(b.carName)}</strong>
+                <p class="muted">${escapeHTML(b.customer)} | ${escapeHTML(b.email)}</p>
+                <p class="muted">Booking ID: ${escapeHTML(b.id)}</p>
+                <p class="muted">${escapeHTML(b.pickup)} to ${escapeHTML(b.drop)}</p>
+            </div>
+            <strong>₹${Number(b.total).toLocaleString("en-IN")}</strong>
+        </div>
+    `).join("") : "<p class='muted'>No bookings available.</p>";
+}
+
+function displayUsers() {
+    const container = document.getElementById("adminUsers");
+
+    container.innerHTML = users.length ? users.map(user => `
+        <div class="booking-item">
+            <div>
+                <strong>${escapeHTML(user.name)}</strong>
+                <p class="muted">${escapeHTML(user.email)}</p>
+                <p class="muted">${escapeHTML(user.phone)}</p>
+            </div>
+        </div>
+    `).join("") : "<p class='muted'>No customers registered.</p>";
+}
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#39;"
+    })[char]);
+}
+
+// ADD DEMO CAR
+document.getElementById("addCarForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById("newCarName").value.trim();
+    const price = Number(document.getElementById("newCarPrice").value);
+    const type = document.getElementById("newCarType").value;
+
+    if (!name || price <= 0) {
+        alert("Enter valid car details.");
+        return;
+    }
+
+    inventory.push({
+        id: Date.now(),
+        name: name,
+        price: price,
+        type: type
+    });
+
+    localStorage.setItem("drivexInventory", JSON.stringify(inventory));
+
+    this.reset();
+    updateDashboard();
+
+    alert("Demo car added successfully!");
+});
+
+// DELETE DEMO CAR
+function deleteCar(id) {
+    if (!confirm("Remove this car from demo inventory?")) return;
+
+    inventory = inventory.filter(car => car.id !== id);
+
+    localStorage.setItem("drivexInventory", JSON.stringify(inventory));
+
+    updateDashboard();
+}
+
+function logout() {
+    localStorage.removeItem("drivexCurrentUser");
+    window.location.href = "login.html";
+}
+
+updateDashboard();
+</script>
+
+</body>
+</html>

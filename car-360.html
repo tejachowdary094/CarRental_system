@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DriveX - 360° Car View</title>
+
+    <link rel="stylesheet" href="car-360.css">
+
+    <!-- 3D Model Viewer -->
+    <script type="module"
+        src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js">
+    </script>
+</head>
+
+<body>
+
+    <header class="viewer-header">
+        <a href="index.html" class="logo">Drive<span>X</span></a>
+
+        <a href="index.html" class="back-btn">
+            ← Back to Home
+        </a>
+    </header>
+
+    <main class="viewer-container">
+
+        <section class="viewer-heading">
+            <p class="tagline">EXPLORE EVERY ANGLE</p>
+
+            <h1>360° Virtual Car View</h1>
+
+            <p>
+                Rotate, zoom and explore your favourite car
+                in an interactive 3D experience.
+            </p>
+        </section>
+
+        <section class="car-viewer-card">
+
+            <div class="car-info">
+                <h2 id="carName">Porsche 911</h2>
+                <span class="view-label">INTERACTIVE 3D VIEW</span>
+            </div>
+
+            <!-- 3D CAR VIEWER -->
+            <model-viewer
+                id="carModel"
+                src="models/porsche.glb"
+                alt="Interactive 3D car model"
+                camera-controls
+                auto-rotate
+                auto-rotate-delay="1000"
+                rotation-per-second="20deg"
+                shadow-intensity="1"
+                exposure="1"
+                environment-image="neutral"
+                camera-orbit="0deg 75deg 105%"
+                field-of-view="30deg"
+                touch-action="pan-y">
+
+                <div class="loading-message" slot="progress-bar">
+                    Loading 3D car model...
+                </div>
+
+            </model-viewer>
+
+            <p id="modelStatus" class="model-status">
+                Drag to rotate • Scroll or pinch to zoom
+            </p>
+
+            <!-- VIEWER CONTROLS -->
+            <div class="viewer-controls">
+
+                <button id="rotateBtn">
+                    Pause Rotation
+                </button>
+
+                <button id="zoomInBtn">
+                    + Zoom In
+                </button>
+
+                <button id="zoomOutBtn">
+                    − Zoom Out
+                </button>
+
+                <button id="resetBtn">
+                    Reset View
+                </button>
+
+            </div>
+
+            <div class="viewer-instructions">
+                <p>🖱️ Drag your mouse to rotate the car.</p>
+                <p>🔍 Use the scroll wheel to zoom.</p>
+                <p>📱 On mobile, swipe and pinch the model.</p>
+            </div>
+
+            <a href="index.html#cars" class="gold-button">
+                Explore More Cars
+            </a>
+
+        </section>
+
+    </main>
+
+    <script src="car-360.js"></script>
+
+</body>
+</html>

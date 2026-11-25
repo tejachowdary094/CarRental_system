@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriveX | Premium Car Rentals</title>
+    <meta name="description" content="Discover premium cars, compare vehicles and plan your next journey with DriveX.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+<header class="navbar">
+    <a href="#" class="logo">DRIVE<span>X</span><small> PREMIUM RENTALS</small></a>
+
+    
+<nav class="nav-links" id="navLinks">
+
+    <a href="index.html" data-i18n="home">Home</a>
+
+    <a href="#cars" data-i18n="cars">Explore Cars</a>
+
+    <a href="#smart" data-i18n="smart">Smart Finder</a>
+
+    <a href="#compare" data-i18n="compare">Compare</a>
+
+    <a href="dashboard.html" data-i18n="dashboard">
+        Dashboard
+    </a>
+
+    <a href="register.html" data-i18n="register">
+        Register
+    </a>
+
+    <a href="login.html" data-i18n="login">
+        Login
+    </a>
+
+    <div class="language-selector">
+        <select id="languageSelect"
+                onchange="changeLanguage(this.value)">
+            <option value="en">🇬🇧 English</option>
+            <option value="hi">🇮🇳 हिन्दी</option>
+            <option value="te">🇮🇳 తెలుగు</option>
+        </select>
+    </div>
+
+</nav>
+
+
+    <div class="nav-actions">
+        <button class="login-btn" onclick="showLogin()">Login</button>
+        <button class="gold-btn" onclick="document.querySelector('#cars').scrollIntoView({behavior:'smooth'})">
+            Rent a Car
+        </button>
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="home">
+    <div class="hero-content">
+        <p class="eyebrow">THE ART OF PREMIUM TRAVEL</p>
+        <h1>Drive Your<br><span>Dream.</span></h1>
+        <p class="hero-description">
+            More than a rental. Experience freedom, comfort and luxury
+            with a vehicle that matches your journey.
+        </p>
+
+        <div class="hero-buttons">
+            <a href="#cars" class="gold-btn">Explore Collection →</a>
+            <a href="#smart" class="outline-btn">Find My Perfect Car</a>
+        </div>
+
+        <div class="hero-stats">
+            <div><strong>50+</strong><small>Premium Cars</small></div>
+            <div><strong>24/7</strong><small>Online Booking</small></div>
+            <div><strong>100%</strong><small>Price Transparency</small></div>
+        </div>
+    </div>
+</section>
+
+<!-- SEARCH BAR -->
+<section class="search-section">
+    <form class="search-box" id="searchForm">
+        <div class="search-field">
+            <label>LOCATION</label>
+            <input type="text" id="location" placeholder="Enter pickup city">
+        </div>
+
+        <div class="search-field">
+            <label>PICKUP DATE</label>
+            <input type="date" id="pickupDate" required>
+        </div>
+
+        <div class="search-field">
+            <label>RETURN DATE</label>
+            <input type="date" id="returnDate" required>
+        </div>
+
+        <button type="submit" class="gold-btn search-btn">Search Cars →</button>
+    </form>
+</section>
+
+<!-- CATEGORIES -->
+<section class="section categories">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">EXPLORE YOUR STYLE</p>
+            <h2>Choose Your <span>Experience</span></h2>
+        </div>
+    </div>
+
+    <div class="category-list">
+        <button class="category active" data-category="All">All Cars</button>
+        <button class="category" data-category="SUV">SUV</button>
+        <button class="category" data-category="Luxury">Luxury</button>
+        <button class="category" data-category="Sports">Sports</button>
+        <button class="category" data-category="Electric">Electric</button>
+        <button class="category" data-category="Sedan">Sedan</button>
+    </div>
+</section>
+
+<!-- CARS -->
+<section class="section cars-section" id="cars">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">OUR COLLECTION</p>
+            <h2>Find Your <span>Perfect Drive</span></h2>
+            <p class="muted">Explore our carefully selected premium vehicles.</p>
+        </div>
+
+        <div class="sort-box">
+            <select id="sortCars">
+                <option value="default">Sort: Recommended</option>
+                <option value="low">Price: Low to High</option>
+                <option value="high">Price: High to Low</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="car-grid" id="carGrid"></div>
+</section>
+
+<!-- SMART FINDER -->
+<section class="section smart-section" id="smart">
+    <div class="smart-content">
+        <p class="eyebrow">INTELLIGENT CAR MATCH</p>
+        <h2>Not Sure Which Car<br>Is <span>Right For You?</span></h2>
+        <p class="muted">
+            Tell us your budget and travel purpose. DriveX will suggest
+            a suitable vehicle from our collection.
+        </p>
+
+        <div class="finder-form">
+            <div>
+                <label>Your Daily Budget (₹)</label>
+                <input type="number" id="budget" min="1" placeholder="Example: 5000">
+            </div>
+
+            <div>
+                <label>Purpose of Travel</label>
+                <select id="purpose">
+                    <option value="Any">Select your purpose</option>
+                    <option value="Family">Family Trip</option>
+                    <option value="Business">Business</option>
+                    <option value="Adventure">Adventure</option>
+                    <option value="Luxury">Luxury Experience</option>
+                    <option value="Eco">Eco-Friendly Travel</option>
+                </select>
+            </div>
+
+            <button class="gold-btn" onclick="recommendCar()">Find My Car →</button>
+        </div>
+
+        <div id="recommendation" class="recommendation"></div>
+    </div>
+</section>
+
+<!-- COMPARE -->
+<section class="section compare-section" id="compare">
+    <p class="eyebrow">MAKE A SMART DECISION</p>
+    <h2>Compare Before <span>You Drive</span></h2>
+    <p class="muted">Select up to three cars to compare their features.</p>
+
+    <div class="compare-select">
+        <select id="compareOne"><option value="">Select first car</option></select>
+        <select id="compareTwo"><option value="">Select second car</option></select>
+        <select id="compareThree"><option value="">Select third car</option></select>
+        <button class="gold-btn" onclick="compareCars()">Compare Now</button>
+    </div>
+
+    <div id="compareResult"></div>
+</section>
+
+<!-- WHY DRIVEX -->
+<section class="section why-section">
+    <p class="eyebrow">THE DRIVEX DIFFERENCE</p>
+    <h2>Travel With <span>Confidence</span></h2>
+
+    <div class="benefit-grid">
+        <div class="benefit-card">
+            <div class="benefit-icon">✦</div>
+            <h3>Transparent Pricing</h3>
+            <p>No hidden surprises. Understand your rental estimate before booking.</p>
+        </div>
+
+        <div class="benefit-card">
+            <div class="benefit-icon">♧</div>
+            <h3>Eco Score</h3>
+            <p>Explore efficient vehicle choices and their estimated environmental impact.</p>
+        </div>
+
+        <div class="benefit-card">
+            <div class="benefit-icon">◈</div>
+            <h3>Easy Booking</h3>
+            <p>Simple booking process with a digital confirmation pass.</p>
+        </div>
+
+        <div class="benefit-card">
+            <div class="benefit-icon">✧</div>
+            <h3>Premium Collection</h3>
+            <p>Discover vehicles selected for different journeys and preferences.</p>
+        </div>
+    </div>
+</section>
+
+<!-- MY BOOKINGS -->
+<section class="section bookings-section" id="bookings">
+    <p class="eyebrow">YOUR JOURNEY HISTORY</p>
+    <h2>My <span>Bookings</span></h2>
+    <div id="bookingList">
+        <p class="muted">Your confirmed demo bookings will appear here.</p>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div>
+        <a href="#" class="logo">DRIVE<span>X</span></a>
+        <p>Make every journey extraordinary.</p>
+    </div>
+
+    <div class="footer-links">
+        <a href="#home">Home</a>
+        <a href="#cars">Cars</a>
+        <a href="#smart">Smart Finder</a>
+        <a href="#bookings">Bookings</a>
+    </div>
+
+    <p class="copyright">© 2026 DriveX. Frontend Project Demo.</p>
+</footer>
+
+<!-- BOOKING MODAL -->
+<div class="modal" id="bookingModal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('bookingModal')">×</button>
+        <p class="eyebrow">RESERVE YOUR RIDE</p>
+        <h2>Book Your <span>Car</span></h2>
+
+        <form id="bookingForm">
+            <input type="hidden" id="selectedCar">
+
+            <div class="form-group">
+                <label>Customer Name</label>
+                <input type="text" id="customerName" required placeholder="Enter your name">
+            </div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="customerEmail" required placeholder="Enter your email">
+            </div>
+
+            <div class="form-group">
+                <label>Pickup Date</label>
+                <input type="date" id="bookPickup" required>
+            </div>
+
+            <div class="form-group">
+                <label>Return Date</label>
+                <input type="date" id="bookReturn" required>
+            </div>
+
+            <div id="priceEstimate" class="price-estimate">
+                Select your dates to calculate the price.
+            </div>
+
+            <button class="gold-btn full-btn" type="submit">Confirm Demo Booking</button>
+        </form>
+    </div>
+</div>
+
+<!-- BOOKING CONFIRMATION -->
+<div class="modal" id="confirmationModal">
+    <div class="modal-content confirmation-content">
+        <button class="close-btn" onclick="closeModal('confirmationModal')">×</button>
+        <div class="success-icon">✓</div>
+        <p class="eyebrow">BOOKING CREATED</p>
+        <h2>You're <span>All Set!</span></h2>
+        <div id="confirmationDetails"></div>
+        <button class="gold-btn full-btn" onclick="closeModal('confirmationModal')">
+            Done
+        </button>
+    </div>
+</div>
+
+<!-- LOGIN DEMO -->
+<div class="modal" id="loginModal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('loginModal')">×</button>
+        <p class="eyebrow">WELCOME TO DRIVEX</p>
+        <h2>Member <span>Access</span></h2>
+        <p class="muted">This is a frontend demonstration login.</p>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" required placeholder="Your email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" required placeholder="Your password">
+            </div>
+            <button class="gold-btn full-btn" type="submit">Continue</button>
+        </form>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

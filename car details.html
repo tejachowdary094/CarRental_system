@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriveX | Car Details</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <a href="index.html" class="logo">DRIVE<span>X</span></a>
+    <a href="index.html#cars" class="outline-btn">Explore Cars</a>
+</header>
+
+<section class="section">
+    <p class="eyebrow">VEHICLE INFORMATION</p>
+    <h2>Discover Your <span>Dream Car</span></h2>
+
+    <div id="carDetails" style="margin-top:30px"></div>
+</section>
+
+<script>
+const vehicleData = [
+    {id:1,name:"Porsche 911",type:"Sports",price:12000,seats:2,fuel:"Petrol",mileage:"12 km/l",eco:45,transmission:"Automatic",image:"https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1000"},
+    {id:2,name:"BMW X5",type:"SUV",price:8500,seats:5,fuel:"Diesel",mileage:"14 km/l",eco:55,transmission:"Automatic",image:"https://images.unsplash.com/photo-1555215695-3004980ad54e?w=1000"},
+    {id:3,name:"Mercedes-Benz C-Class",type:"Luxury",price:9500,seats:5,fuel:"Petrol",mileage:"16 km/l",eco:60,transmission:"Automatic",image:"https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1000"},
+    {id:4,name:"Tesla Model 3",type:"Electric",price:7500,seats:5,fuel:"Electric",mileage:"EV",eco:95,transmission:"Automatic",image:"https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=1000"},
+    {id:5,name:"Range Rover Sport",type:"SUV",price:11000,seats:5,fuel:"Diesel",mileage:"13 km/l",eco:50,transmission:"Automatic",image:"https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1000"},
+    {id:6,name:"Audi A6",type:"Sedan",price:7000,seats:5,fuel:"Petrol",mileage:"17 km/l",eco:65,transmission:"Automatic",image:"https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1000"},
+    {id:7,name:"Lamborghini Huracan",type:"Sports",price:25000,seats:2,fuel:"Petrol",mileage:"8 km/l",eco:25,transmission:"Automatic",image:"https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=1000"},
+    {id:8,name:"Toyota Fortuner",type:"SUV",price:6500,seats:7,fuel:"Diesel",mileage:"14 km/l",eco:55,transmission:"Automatic",image:"https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=1000"},
+    {id:9,name:"Hyundai IONIQ 5",type:"Electric",price:8000,seats:5,fuel:"Electric",mileage:"EV",eco:95,transmission:"Automatic",image:"https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=1000"}
+];
+
+const params = new URLSearchParams(window.location.search);
+const id = Number(params.get("id")) || 1;
+const car = vehicleData.find(item => item.id === id);
+const container = document.getElementById("carDetails");
+
+if (car) {
+    container.innerHTML = `
+        <div class="car-card">
+            <div class="car-image" style="height:380px">
+                <img src="${car.image}" alt="${car.name}">
+            </div>
+
+            <div class="car-info">
+                <p class="eyebrow">${car.type} COLLECTION</p>
+                <h2>${car.name}</h2>
+                <h3 style="color:#d6ad60;margin:15px 0">
+                    ₹${car.price.toLocaleString("en-IN")} / day
+                </h3>
+
+                <div class="car-specs">
+                    <span>Seats: ${car.seats}</span>
+                    <span>Fuel: ${car.fuel}</span>
+                    <span>Transmission: ${car.transmission}</span>
+                </div>
+
+                <div class="car-specs">
+                    <span>Mileage: ${car.mileage}</span>
+                    <span>Eco Score: ${car.eco}/100</span>
+                </div>
+
+                <button class="gold-btn" onclick="bookCar()">
+                    Book This Car →
+                </button>
+            </div>
+        </div>
+    `;
+} else {
+    container.innerHTML = "<p class='muted'>Car not found.</p>";
+}
+
+function bookCar() {
+    window.location.href = "booking.html?car=" + car.id;
+}
+</script>
+<script>
+    const currentCarId =
+        new URLSearchParams(window.location.search).get("id") || "1";
+
+    document.getElementById("view360Button").href =
+        "car-360.html?id=" + encodeURIComponent(currentCarId);
+</script>
+
+</body>
+</html>

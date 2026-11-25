@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriveX | My Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <a href="index.html" class="logo">DRIVE<span>X</span></a>
+    <div class="nav-actions">
+        <a href="index.html" class="outline-btn">Home</a>
+        <button class="gold-btn" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<section class="section">
+    <p class="eyebrow">CUSTOMER CONTROL CENTER</p>
+    <h2>Welcome, <span id="customerName">Driver</span></h2>
+    <p class="muted" id="customerEmail"></p>
+
+    <div class="benefit-grid" style="margin-top:35px">
+        <div class="benefit-card">
+            <h3>Total Bookings</h3>
+            <h2 id="totalBookings">0</h2>
+        </div>
+
+        <div class="benefit-card">
+            <h3>Favourite Cars</h3>
+            <h2 id="totalFavorites">0</h2>
+        </div>
+
+        <div class="benefit-card">
+            <h3>Account Type</h3>
+            <h2 style="font-size:22px">Customer</h2>
+        </div>
+
+        <div class="benefit-card">
+            <h3>Membership</h3>
+            <h2 style="font-size:22px">DriveX</h2>
+        </div>
+    </div>
+
+    <div style="margin-top:65px">
+        <h2>My <span>Booking History</span></h2>
+        <div id="myBookings" style="margin-top:20px"></div>
+    </div>
+
+    <div style="margin-top:65px">
+        <h2>My <span>Favourite Cars</span></h2>
+        <div id="favoriteCars" class="car-grid" style="margin-top:25px"></div>
+    </div>
+</section>
+
+<script>
+const user = JSON.parse(localStorage.getItem("drivexCurrentUser") || "null");
+
+if (!user || user.role !== "customer") {
+    alert("Please login as a customer first.");
+    window.location.href = "login.html";
+}
+
+const bookings = JSON.parse(localStorage.getItem("drivexBookings") || "[]");
+const favorites = JSON.parse(localStorage.getItem("drivexFavorites") || "[]");
+
+document.getElementById("customerName").textContent = user?.name || "Driver";
+document.getElementById("customerEmail").textContent = user?.email || "";
+document.getElementById("totalBookings").textContent = bookings.filter(b => b.email === user?.email).length;
+document.getElementById("totalFavorites").textContent = favorites.length;
+
+const myBookings = bookings.filter(b => b.email === user?.email);
+const bookingContainer = document.getElementById("myBookings");
+
+if (myBookings.length === 0) {
+    bookingContainer.innerHTML = "<p class='muted'>No bookings found. Explore cars to create a demo booking.</p>";
+} else {
+    bookingContainer.innerHTML = myBookings.map(b => `
+        <div class="booking-item">
+            <div>
+                <strong>${b.carName}</strong>
+                <p class="muted">Booking ID: ${b.id}</p>
+                <p class="muted">${b.pickup} to ${b.drop}</p>
+            </div>
+            <div>
+                <strong>₹${Number(b.total).toLocaleString("en-IN")}</strong>
+                <p class="muted">${b.status}</p>
+                <a href="booking.html?id=${encodeURIComponent(b.id)}"
+                   style="color:#d6ad60">View Receipt →</a>
+            </div>
+        </div>
+    `).join("");
+}
+
+// Demo vehicle information for favourites
+const favoriteData = [
+    {id:1,name:"Porsche 911",price:12000,image:"https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500"},
+    {id:2,name:"BMW X5",price:8500,image:"https://images.unsplash.com/photo-1555215695-3004980ad54e?w=500"},
+    {id:3,name:"Mercedes-Benz C-Class",price:9500,image:"https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=500"},
+    {id:4,name:"Tesla Model 3",price:7500,image:"https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=500"},
+    {id:5,name:"Range Rover Sport",price:11000,image:"https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=500"},
+    {id:6,name:"Audi A6",price:7000,image:"https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=500"},
+    {id:7,name:"Lamborghini Huracan",price:25000,image:"https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=500"},
+    {id:8,name:"Toyota Fortuner",price:6500,image:"https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=500"},
+    {id:9,name:"Hyundai IONIQ 5",price:8000,image:"https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=500"}
+];
+
+const favoriteContainer = document.getElementById("favoriteCars");
+const selectedFavorites = favoriteData.filter(car => favorites.includes(car.id));
+
+favoriteContainer.innerHTML = selectedFavorites.length
+    ? selectedFavorites.map(car => `
+        <div class="car-card">
+            <div class="car-image">
+                <img src="${car.image}" alt="${car.name}">
+            </div>
+            <div class="car-info">
+                <h3>${car.name}</h3>
+                <p style="color:#d6ad60">₹${car.price.toLocaleString("en-IN")} / day</p>
+                <a class="gold-btn" href="car-details.html?id=${car.id}">View Car</a>
+            </div>
+        </div>
+    `).join("")
+    : "<p class='muted'>No favourite cars saved yet.</p>";
+
+function logout() {
+    localStorage.removeItem("drivexCurrentUser");
+    window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>
